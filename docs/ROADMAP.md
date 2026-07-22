@@ -12,7 +12,20 @@ screen or isolated function works.
 **Gate:** tests validate legal state transitions and the repository contains no
 deployment-specific addresses, paths, credentials, or cached content.
 
-## 1. Acquisition core
+## 1. Selected-corpus passage search
+
+- Parse text-bearing EPUB and PDF files into immutable source units.
+- Preserve book, chapter/page, block, and character-offset provenance.
+- Retrieve lexical and semantic candidates inside an explicit book scope.
+- Rerank passages and merge only adjacent or overlapping source spans.
+- Display exact excerpts with expandable context and reader navigation.
+- Report image-only files as unindexed; do not invoke OCR implicitly.
+
+**Gate:** benchmark queries over one book and a selected multi-book corpus retrieve
+the expected passages, never leak results from outside the scope, preserve source
+text byte-for-byte after decoding, and return no generated prose.
+
+## 2. Acquisition core
 
 - Search API with normalized provider results.
 - Follow list and wishlist as distinct request modes.
@@ -22,7 +35,7 @@ deployment-specific addresses, paths, credentials, or cached content.
 **Gate:** a fixture publication can be searched, requested, downloaded through a
 test provider, retried after failure, and placed in staging exactly once.
 
-## 2. Staging and Grimmory
+## 3. Staging and Grimmory
 
 - File validation, hashing, format inspection, and quarantine.
 - Metadata manifest and deterministic destination planning.
@@ -31,7 +44,7 @@ test provider, retried after failure, and placed in staging exactly once.
 **Gate:** a downloaded fixture moves through every state and appears once in a
 test Grimmory instance with its file and metadata linked.
 
-## 3. Metadata and periodicals
+## 4. Metadata and periodicals
 
 - Pluggable bibliographic providers with cache and provenance.
 - Contributor, title, identifier, series, and issue normalization.
@@ -41,7 +54,7 @@ test Grimmory instance with its file and metadata linked.
 **Gate:** representative novel, anthology, magazine issue, and unnumbered RPG
 publication are identified and imported without being forced into the same model.
 
-## 4. Library maintenance
+## 5. Library maintenance
 
 - Full-library duplicate scan with edition- and format-aware policies.
 - Broken metadata, cover, orphan, and fragmented-series jobs.
@@ -50,16 +63,6 @@ publication are identified and imported without being forced into the same model
 
 **Gate:** seeded duplicates and damaged records are all found; dry-run output
 matches applied results; unrelated records remain unchanged.
-
-## 5. Grounded content search
-
-- Text extraction with stable page/chapter locators.
-- Hybrid lexical and semantic indexes.
-- Natural-language queries using an optional local model.
-- Passage-first results and citation-constrained synthesis.
-
-**Gate:** benchmark questions retrieve expected passages, expose their exact
-locations, and fail explicitly when the corpus does not support an answer.
 
 ## 6. Release engineering
 

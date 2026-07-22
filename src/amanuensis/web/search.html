@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Amanuensis - Recherche dans les livres</title>
+  <link rel="stylesheet" href="/assets/search.css">
+</head>
+<body>
+  <aside class="scope-panel" aria-label="S&eacute;lection du corpus">
+    <header class="brand">
+      <span class="brand-mark" aria-hidden="true">A</span>
+      <span><strong>Amanuensis</strong><small>Recherche documentaire</small></span>
+    </header>
+    <label class="field-label" for="corpus">Corpus</label>
+    <select id="corpus">
+      <option value="">S&eacute;lection manuelle</option>
+    </select>
+    <div class="book-heading">
+      <span>Livres</span>
+      <button id="toggle-all" class="quiet-button" type="button">Tout s&eacute;lectionner</button>
+    </div>
+    <label class="filter-field">
+      <span class="sr-only">Filtrer les livres</span>
+      <input id="book-filter" type="search" placeholder="Filtrer les titres">
+    </label>
+    <div id="book-list" class="book-list" aria-live="polite"></div>
+  </aside>
+
+  <main>
+    <header class="page-header">
+      <div>
+        <h1>Recherche dans les livres</h1>
+        <p>Extraits exacts, limit&eacute;s au corpus s&eacute;lectionn&eacute;.</p>
+      </div>
+      <span id="selection-count" class="selection-count">0 livre</span>
+    </header>
+
+    <form id="search-form" class="search-bar">
+      <label class="search-input">
+        <span class="sr-only">Question ou notion a rechercher</span>
+        <input id="query" required autocomplete="off" placeholder="Trouver les passages qui parlent de...">
+      </label>
+      <div class="segmented" aria-label="Ordre des resultats">
+        <label><input type="radio" name="order" value="relevance" checked><span>Pertinence</span></label>
+        <label><input type="radio" name="order" value="reading"><span>Ordre de lecture</span></label>
+      </div>
+      <button class="primary-button" type="submit">Rechercher</button>
+    </form>
+
+    <section class="result-toolbar" aria-live="polite">
+      <strong id="result-title">Aucune recherche lancee</strong>
+      <span id="result-meta"></span>
+    </section>
+    <section id="results" class="results">
+      <div class="empty-state">
+        <strong>S&eacute;lectionnez un ou plusieurs livres.</strong>
+        <p>La recherche assemble des passages originaux sans synth&egrave;se ni reformulation.</p>
+      </div>
+    </section>
+  </main>
+
+  <template id="excerpt-template">
+    <article class="excerpt">
+      <header>
+        <div><strong class="excerpt-book"></strong><span class="excerpt-location"></span></div>
+        <span class="excerpt-score"></span>
+      </header>
+      <blockquote></blockquote>
+      <footer><span class="excerpt-offsets"></span><span class="excerpt-channels"></span></footer>
+    </article>
+  </template>
+  <script src="/assets/search.js" defer></script>
+</body>
+</html>

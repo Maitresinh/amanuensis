@@ -9,7 +9,7 @@ from pathlib import Path
 
 from .acquisition import CatalogueQuery, RemoteDownload, SearchCandidate, SearchPage
 from .domain import StagedItem
-from .search import Passage, PassageQuery, SearchHit, SourceUnit
+from .search import IndexDocument, PassageQuery, SearchHit, SourceUnit
 
 
 class MetadataProvider(Protocol):
@@ -61,6 +61,8 @@ class SourceTextStore(Protocol):
 
 
 class PassageIndex(Protocol):
-    def index(self, passages: Iterable[Passage]) -> None: ...
+    def delete_books(self, book_ids: frozenset[str]) -> None: ...
+
+    def index(self, passages: Iterable[IndexDocument]) -> None: ...
 
     def search(self, query: PassageQuery) -> Iterable[SearchHit]: ...

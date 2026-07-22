@@ -68,6 +68,21 @@ class Passage:
 
 
 @dataclass(frozen=True, slots=True)
+class IndexDocument:
+    """Text and payload indexed for one exact passage."""
+
+    passage: Passage
+    text: str
+    corpus_ids: frozenset[str] = frozenset()
+
+    def __post_init__(self) -> None:
+        if not self.text:
+            raise ValueError("indexed passage text must not be empty")
+        if len(self.text) != self.passage.end - self.passage.start:
+            raise ValueError("indexed text length must match passage offsets")
+
+
+@dataclass(frozen=True, slots=True)
 class SearchHit:
     passage: Passage
     score: float

@@ -99,13 +99,24 @@ The search path does not contain answer generation, summarization, translation,
 or paraphrasing. Image-only files remain visibly unindexed unless a separately
 configured OCR adapter supplies source text.
 
-The initial implementation separates four concerns:
+The implementation separates four concerns:
 
 1. a source-text store for immutable units and offsets;
 2. a lexical index for exact terms and phrases;
 3. a semantic index for concept-level recall;
 4. a deterministic assembler that copies source spans.
 
-The proposed backend uses Qdrant for filtered hybrid retrieval, BGE-M3 for
-multilingual retrieval signals, and an optional PyLate/ColBERT reranker after the
-baseline has been measured. These remain adapters behind the domain contract.
+`extraction.py` reads the EPUB spine and PDF text layer into immutable
+`SourceUnit` records. `indexing.py` creates overlapping windows with stable IDs
+and exact character offsets. `SQLiteSearchStore` persists source units, passages,
+and corpus membership. `QdrantHybridPassageIndex` stores BGE-M3 dense and sparse
+vectors and fuses both candidate lists with RRF.
+
+The explicit book filter is sent to every Qdrant prefetch branch and the fused
+query. Amanuensis then validates every returned payload again before source text
+is read. A backend result outside the selected set is an error, not a result to
+hide in the UI.
+
+PyLate/ColBERT remains an optional reranking experiment after the baseline has
+been measured. It is not on the current production path and may not alter source
+text or widen the resolved scope.

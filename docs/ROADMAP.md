@@ -14,12 +14,16 @@ deployment-specific addresses, paths, credentials, or cached content.
 
 ## 1. Selected-corpus passage search
 
-- Parse text-bearing EPUB and PDF files into immutable source units.
-- Preserve book, chapter/page, block, and character-offset provenance.
-- Retrieve lexical and semantic candidates inside an explicit book scope.
+- [x] Parse text-bearing EPUB and PDF files into immutable source units.
+- [x] Preserve book, chapter/page, block, and character-offset provenance.
+- [x] Retrieve dense and sparse candidates inside an explicit book scope.
+- [x] Fuse candidates in Qdrant with filters applied to every branch.
 - Rerank passages and merge only adjacent or overlapping source spans.
-- Display exact excerpts with expandable context and reader navigation.
-- Report image-only files as unindexed; do not invoke OCR implicitly.
+- [x] Merge only adjacent or overlapping source spans.
+- [x] Display exact excerpts with corpus/book selection and source locators.
+- [x] Report image-only files as unindexed; do not invoke OCR implicitly.
+- Add expandable context and Grimmory reader navigation.
+- Evaluate PyLate/ColBERT against the checked-in benchmark before enabling it.
 
 **Gate:** benchmark queries over one book and a selected multi-book corpus retrieve
 the expected passages, never leak results from outside the scope, preserve source

@@ -27,13 +27,17 @@ text byte-for-byte after decoding, and return no generated prose.
 
 ## 2. Acquisition core
 
-- Search API with normalized provider results.
+- [x] Search adapter with normalized provider results.
 - Follow list and wishlist as distinct request modes.
-- Durable queue, retry/backoff, provider rotation, cancellation, and history.
-- Detailed download progress and actionable failure reasons.
+- [x] Durable queue, retry/backoff, cancellation, and history.
+- [x] Deterministic candidate scoring with recorded evidence.
+- [x] Atomic, checksum-verified transfer into staging.
+- [ ] Provider rotation and watch/follow release discovery.
+- [ ] Web presentation of detailed progress and actionable failure reasons.
 
-**Gate:** a fixture publication can be searched, requested, downloaded through a
-test provider, retried after failure, and placed in staging exactly once.
+**Gate:** passed for the adapter fixture: a publication is searched, requested,
+downloaded over HTTP, checksum-verified, and placed in staging exactly once. A
+retryable failure is moved behind existing work and survives repository reopen.
 
 ## 3. Staging and Grimmory
 

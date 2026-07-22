@@ -17,5 +17,8 @@ classifiers = [
 ]
 dependencies = []
 
+[project.scripts]
+amanuensis = "amanuensis.cli:main"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/amanuensis"]

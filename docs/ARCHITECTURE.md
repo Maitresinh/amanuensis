@@ -53,6 +53,36 @@ quarantined items require an explicit policy or review action.
 - Original files remain immutable during analysis. Repairs create a plan and a
   derived candidate before any replacement policy is applied.
 
+## Acquisition architecture
+
+Catalogue discovery and file transfer are deliberately separate ports:
+
+```mermaid
+flowchart LR
+  REQUEST["Persistent request"] --> SEARCH["Catalogue adapter"]
+  SEARCH --> SCORE["Deterministic candidate scoring"]
+  SCORE --> QUEUE["SQLite acquisition queue"]
+  QUEUE --> DOWNLOAD["File acquisition adapter"]
+  DOWNLOAD --> VERIFY["Atomic transfer and MD5 verification"]
+  VERIFY --> STAGING["Configured staging role"]
+```
+
+The same Ephemera compatibility object can implement both ports during
+migration, but the coordinator does not require that coupling. A metadata-rich
+catalogue and a distinct lawful file provider may therefore be composed without
+changing queue or workflow code.
+
+The durable states are `wanted`, `searching`, `queued`, `downloading`, `delayed`,
+`available`, `staging`, `staged`, `failed_retryable`, `failed_final`, and
+`cancelled`. Retryable work receives a new queue sequence, so a failing source
+cannot monopolize the front of the queue. Every transition appends a timestamped
+event with the selection evidence or failure reason.
+
+The Ephemera compatibility adapter maps its public search, queue, status, retry,
+cancel, and file routes into these contracts. Provider rate-limit, quota, and
+anti-automation failures remain provider failures; Amanuensis records and
+schedules them but does not bypass provider controls.
+
 ## Search architecture
 
 Content search is retrieval with evidence, not free-form generation:

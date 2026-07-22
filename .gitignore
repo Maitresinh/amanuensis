@@ -1,5 +1,7 @@
 __pycache__/
 *.py[cod]
+*.egg-info/
+.coverage
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
@@ -9,7 +11,11 @@ build/
 data/
 staging/
 cache/
+var/
 *.db
+*.db-shm
+*.db-wal
+*.part
 *.sqlite*
 *.log
 .env

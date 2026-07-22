@@ -5,6 +5,9 @@ from __future__ import annotations
 from collections.abc import Iterable
 from typing import Protocol
 
+from pathlib import Path
+
+from .acquisition import CatalogueQuery, RemoteDownload, SearchCandidate, SearchPage
 from .domain import StagedItem
 from .search import Passage, PassageQuery, SearchHit, SourceUnit
 
@@ -19,6 +22,30 @@ class AcquisitionProvider(Protocol):
     name: str
 
     def acquire(self, item: StagedItem, destination_role: str) -> StagedItem: ...
+
+
+class CatalogueSearchAdapter(Protocol):
+    """Searches one catalogue and returns normalized candidates."""
+
+    name: str
+
+    def search(self, query: CatalogueQuery) -> SearchPage: ...
+
+
+class FileAcquisitionAdapter(Protocol):
+    """Queues, tracks, retries, and retrieves a selected candidate."""
+
+    name: str
+
+    def queue(self, candidate: SearchCandidate) -> RemoteDownload: ...
+
+    def status(self, identifier: str) -> RemoteDownload: ...
+
+    def retry(self, identifier: str) -> RemoteDownload: ...
+
+    def cancel(self, identifier: str) -> RemoteDownload: ...
+
+    def retrieve(self, candidate: SearchCandidate, destination: Path) -> Path: ...
 
 
 class LibraryAdapter(Protocol):

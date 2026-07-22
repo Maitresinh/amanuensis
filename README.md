@@ -7,8 +7,9 @@ library. It brings discovery, watchlists, acquisition, a controlled staging
 workspace, metadata repair, periodical indexing, and library import into one
 observable workflow.
 
-> Project status: early development. The domain model and project boundaries are
-> established; production migration from Ephemera and Ephemera+ is in progress.
+> Project status: early development. The acquisition core, durable queue, and
+> Ephemera compatibility adapter are implemented. Grimmory import and the web
+> client remain separate milestones.
 
 ## Why Amanuensis?
 
@@ -65,6 +66,36 @@ discover -> watch/wish -> acquire -> stage -> identify -> review/repair -> impor
 - [Ephemera lineage](docs/UPSTREAM.md)
 - [Contributing](CONTRIBUTING.md)
 
+## Acquisition CLI
+
+The first end-to-end vertical slice is available as a standard-library Python
+package. Search and file acquisition are separate adapter ports; the included
+compatibility adapter implements both through an Ephemera HTTP service.
+
+```bash
+python -m pip install -e .
+
+amanuensis --api-url http://ephemera:8286/api search "Example title" \
+  --author "Example author" --language fr --format epub
+
+amanuensis --api-url http://ephemera:8286/api request "Example title" \
+  --requested-title "Example title" --requested-author "Example author" \
+  --language fr --format epub
+
+amanuensis --api-url http://ephemera:8286/api run --wait
+amanuensis queue
+```
+
+`request` is the durable wishlist entry point. Amanuensis scores normalized
+results instead of selecting the provider's first hit. Temporary failures are
+scheduled with exponential backoff and moved behind existing work. Completed
+files are streamed to the configured staging role, verified against their MD5,
+and published atomically. This slice never writes to a library directory.
+
+Configuration can be supplied with command options or the variables documented
+in [.env.example](.env.example). `cancel`, `retry`, and `history` expose the
+corresponding queue operations without confirmation phrases.
+
 ## Lineage
 
 Amanuensis is an independent continuation inspired by Ephemera 1.4.2 and by the
@@ -72,8 +103,9 @@ Ephemera+ integration work. The original Ephemera repository is no longer
 available on GitHub, so this repository cannot be represented as a native GitHub
 fork. Its published OCI provenance is recorded in [UPSTREAM.md](docs/UPSTREAM.md).
 
-No recovered Ephemera binary or minified artifact is included in this bootstrap
-commit. Code will be migrated only when its source and licensing can be audited.
+No recovered Ephemera binary or minified artifact is included. The compatibility
+adapter is an independent implementation of the public HTTP contract and can be
+replaced independently for catalogue search and file acquisition.
 
 ## Responsible use
 

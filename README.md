@@ -68,8 +68,8 @@ discover -> watch/wish -> acquire -> stage -> identify -> review/repair -> impor
 
 ## Acquisition CLI
 
-The first end-to-end vertical slice is available as a standard-library Python
-package. Search and file acquisition are separate adapter ports; the included
+The first end-to-end vertical slice is available as a Python package. Search
+and file acquisition are separate adapter ports; the included
 compatibility adapter implements both through an Ephemera HTTP service.
 
 ```bash
@@ -95,6 +95,37 @@ and published atomically. This slice never writes to a library directory.
 Configuration can be supplied with command options or the variables documented
 in [.env.example](.env.example). `cancel`, `retry`, and `history` expose the
 corresponding queue operations without confirmation phrases.
+
+## Selected-corpus passage search
+
+The first content-search slice extracts text-bearing EPUB and PDF files into
+immutable chapter/page units, stores their source text and exact offsets in
+SQLite, and indexes overlapping passages in Qdrant. BGE-M3 supplies dense and
+sparse signals; Qdrant fuses both rankings with RRF while applying the selected
+book and corpus filters to each retrieval branch. Results are copied from the
+stored source units and are never summarized or rewritten.
+
+Install the local embedding adapter and start a Qdrant service before indexing:
+
+```bash
+python -m pip install -e '.[bge]'
+
+amanuensis --qdrant-url http://qdrant:6333 index-text book-42 /books/example.epub \
+  --title "Example book" --corpus research
+
+amanuensis --qdrant-url http://qdrant:6333 content-search \
+  "floating cities powered by solar energy" --corpus-id research
+
+amanuensis --qdrant-url http://qdrant:6333 serve-content-search \
+  --host 0.0.0.0 --port 8122
+```
+
+The web screen at port `8122` lists indexed books and corpora, supports explicit
+book selection, and displays source labels, exact excerpts, offsets, scores, and
+retrieval channels. A PDF without a usable text layer is recorded as
+`ocr_required`; OCR is not invoked automatically. PyLate remains an optional,
+unwired evaluation dependency until a checked-in benchmark demonstrates a
+ranking improvement over the BGE-M3/Qdrant baseline.
 
 ## Lineage
 

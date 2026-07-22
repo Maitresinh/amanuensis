@@ -15,7 +15,14 @@ classifiers = [
   "License :: OSI Approved :: MIT License",
   "Programming Language :: Python :: 3.12",
 ]
-dependencies = []
+dependencies = [
+  "pypdf>=6.0,<7",
+  "qdrant-client>=1.15,<2",
+]
+
+[project.optional-dependencies]
+bge = ["FlagEmbedding>=1.4,<2"]
+rerank = ["pylate>=1.2,<2"]
 
 [project.scripts]
 amanuensis = "amanuensis.cli:main"

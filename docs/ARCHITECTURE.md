@@ -55,11 +55,27 @@ quarantined items require an explicit policy or review action.
 
 ## Search architecture
 
-Semantic search is retrieval with evidence, not free-form generation:
+Content search is retrieval with evidence, not free-form generation:
 
-1. Extract page- or chapter-addressable text.
-2. Preserve document, edition, page, and section provenance.
-3. Build lexical and vector indexes behind a search port.
-4. Let an optional local model expand or disambiguate the query.
-5. Return ranked passages with exact locators.
-6. Generate summaries only from the selected passages and keep citations visible.
+1. Accept only an explicit, resolved set of selected book identifiers.
+2. Extract page- or chapter-addressable text already present in the files.
+3. Preserve immutable source units and character offsets.
+4. Index overlapping passages for lexical and semantic candidate retrieval.
+5. Fuse and rerank candidates inside the selected scope.
+6. Merge adjacent or overlapping hits by their source offsets.
+7. Return verbatim excerpts with book, chapter/page, and passage locators.
+
+The search path does not contain answer generation, summarization, translation,
+or paraphrasing. Image-only files remain visibly unindexed unless a separately
+configured OCR adapter supplies source text.
+
+The initial implementation separates four concerns:
+
+1. a source-text store for immutable units and offsets;
+2. a lexical index for exact terms and phrases;
+3. a semantic index for concept-level recall;
+4. a deterministic assembler that copies source spans.
+
+The proposed backend uses Qdrant for filtered hybrid retrieval, BGE-M3 for
+multilingual retrieval signals, and an optional PyLate/ColBERT reranker after the
+baseline has been measured. These remain adapters behind the domain contract.

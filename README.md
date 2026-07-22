@@ -36,7 +36,8 @@ discover -> watch/wish -> acquire -> stage -> identify -> review/repair -> impor
 - Model magazines and anthologies as first-class publications with contents.
 - Send validated items to Grimmory through its API and import workflow.
 - Run recurring jobs with progress, findings, review queues, and traceable actions.
-- Add grounded semantic search that always returns passages and source locations.
+- Search a selected book or corpus and assemble relevant, verbatim passages with
+  exact source locations. No generated answer or synthesis is part of this path.
 
 ## Design principles
 
@@ -53,6 +54,8 @@ discover -> watch/wish -> acquire -> stage -> identify -> review/repair -> impor
    articles, stories, scenarios, translators, and page ranges have explicit models.
 7. **Local-first intelligence.** Optional local models can assist without sending
    library content to third parties.
+8. **Retrieval is not authorship.** Content search ranks and assembles original
+   passages; it never rewrites them into an answer.
 
 ## Documentation
 

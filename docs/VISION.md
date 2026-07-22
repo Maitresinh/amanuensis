@@ -16,8 +16,9 @@ and discoverable library item without requiring routine manual intervention.
 - reconstruct fragmented series and publication runs;
 - identify missing volumes or issues without confusing them with duplicates;
 - extract structured contents from magazines, anthologies, and collections;
-- search inside books and receive exact, navigable passages rather than invented
-  summaries.
+- search inside one selected book or an explicit corpus;
+- receive exact, navigable passages assembled by proximity and relevance, without
+  a generated answer, summary, or interpretation.
 
 ## Publication model
 
@@ -45,11 +46,14 @@ Each background job exposes:
 
 ## AI boundary
 
-Local models are useful for OCR interpretation, cover comparison, contents
-classification, entity linking, and natural-language query understanding. They
-must not silently invent metadata or rewrite source passages. A model proposal is
-one evidence source among others and never replaces identifiers, exact text,
-catalogue records, or user policy.
+Local models are useful for cover comparison, contents classification, entity
+linking, natural-language query understanding, embeddings, and reranking. They
+must not silently invent metadata or rewrite source passages. Content search ends
+with retrieval: the displayed text is always copied from the indexed source.
+
+Text-bearing EPUB and PDF files are the primary indexing path. Image-only files
+are reported as unavailable for content search; OCR is an optional future adapter,
+not a prerequisite or a silent fallback.
 
 ## Non-goals
 
